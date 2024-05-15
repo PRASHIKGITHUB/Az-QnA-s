@@ -2,50 +2,38 @@
 using namespace std;
 
 using lli = long long int;
-multiset<lli> ms;
 void solve()
 {
     int n, k, d;
     cin >> n >> k >> d;
     lli arr[n];
-    lli prefix[n];
     for (int i = 0; i < n; i++)
     {
         cin >> arr[i];
-        prefix[i] = arr[i];
-        if (i)
-        {
-            prefix[i] += prefix[i - 1];
-        }
     }
-
     int head = -1;
     int tail = 0;
-    int oddcnt = 0;
+    lli sum = 0;
+    lli odd = 0;
     lli ans = INT_MIN;
-
     while (tail < n)
     {
-        while (head + 1 < n && (oddcnt < k || arr[head + 1] % 2 == 0))
+
+        while (head + 1 < n && (sum + arr[head + 1] <= d && (odd < k || arr[head + 1] % 2 == 0)))
         {
             head++;
-            ms.insert(prefix[head]);
             if (arr[head] % 2 != 0)
             {
-                oddcnt++;
+                odd++;
             }
+            sum += arr[head];
         }
-
-        lli lminusone = (tail == 0) ? 0 : (prefix[tail - 1]);
-        auto it = ms.upper_bound(lminusone + d);
-
-        if (it != ms.begin()) //if the window is empty then ms.begin()=ms.end()
+        if ((head - tail + 1)!=0 && sum<=d  && odd<=k)
         {
-            it--;
-            ans = max(ans, *it - lminusone);
+            ans = max(ans, sum);
         }
 
-        if (head < tail)
+        if (tail > head)
         {
             tail++;
             head = tail - 1;
@@ -54,9 +42,9 @@ void solve()
         {
             if (arr[tail] % 2 != 0)
             {
-                oddcnt--;
+                odd--;
             }
-            ms.erase(ms.find(prefix[tail]));
+            sum -= arr[tail];
             tail++;
         }
     }
