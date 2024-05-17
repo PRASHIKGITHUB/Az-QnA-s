@@ -6,63 +6,42 @@ int grid[3][3];
 vector<pair<int, int>> prevPos;
 bool check(int i, int j)
 {
-    if (!prevPos.empty())
-    {
-        int size = prevPos.size();
-        previ = prevPos[size - 1].first;
-        prevj = prevPos[size - 1].second;
+    if(!prevPos.empty()){
+        int size=prevPos.size();
+        previ=prevPos[size-1].first;
+        prevj=prevPos[size-1].second;
     }
-    else
-    {
-        // first element is selected
-        return 1;
+    else{
+        return true;
     }
-    // check it the dots are used in between current dot and previous dot
-    if (abs(i - previ) == 2 && abs(j - prevj) == 2)
-    {
-        if (grid[1][1] == 1)
-        {
+
+    if(abs(i-previ)==2  &&  abs(j-prevj)==2){//extream end of diagonal
+        if(grid[1][1]==1){
             return 1;
         }
-        else
-        {
+        else{
             return 0;
         }
     }
-    else if (abs(i - previ) == 1 && abs(j - prevj) == 1)
-    {
-        return true;
-    }
-    if (previ == i && abs(previ - i) == 2)
-    {
-        if (grid[i][1] == 1)
-        {
+
+    if(abs(i-previ)==2 && abs(j-prevj)==0){//vertical extream
+        if(grid[1][j]==1){
             return 1;
         }
-        else
-        {
-            return false;
+        else{
+            return 0;
         }
     }
-    else if (previ == i && abs(previ - i) == 1)
-    {
-        return 1;
-    }
-    if (prevj == j && abs(prevj - j) == 2)
-    {
-        if (grid[1][j] == 1)
-        {
+
+    if(abs(i-previ)==0 && abs(j-prevj)==2){//horizontal extream
+        if(grid[i][1]==1){
             return 1;
         }
-        else
-        {
-            return false;
+        else{
+            return 0;
         }
     }
-    else if (prevj == j && abs(prevj - j) == 1)
-    {
-        return 1;
-    }
+
     return 1;
 }
 int rec(int level)
