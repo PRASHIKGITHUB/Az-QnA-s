@@ -1,103 +1,72 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-int n;
-int previ = -1, prevj = -1;
-int grid[3][3];
-vector<pair<int, int>> prevPos;
-bool check(int i, int j)
-{
-    if (!prevPos.empty())
-    {
-        int size = prevPos.size();
-        previ = prevPos[size - 1].first;
-        prevj = prevPos[size - 1].second;
+using lli = long long int;
+
+lli fact[14];
+
+vector<lli> kthsol;
+set<lli> digits;
+// 6227020800=13!
+// 479001600=12!
+// 1000000000
+//if n>13 then calclate the permutations of the last 13 digits 
+// for 1 to 12  calculate 1-12! respectively
+//for n>=13  calculate 13! permuatitons for the last 13 digits
+void Kth(lli k,lli n){
+    if(n==0){
+        return;
     }
-    else
-    {
-        // first element is selected
-        return 1;
-    }
-    // check it the dots are used in between current dot and previous dot
-    if (abs(i - previ) == 2 && abs(j - prevj) == 2)
-    {
-        if (grid[1][1] == 1)
-        {
-            return 1;
+    lli m=1;
+    int toerase;
+    for(auto i:digits){
+        if(k<=fact[n-1]*m){
+            kthsol.push_back(i);
+            toerase=i;
+            break;
         }
-        else
-        {
-            return 0;
-        }
+        m++;
     }
-    else if (abs(i - previ) == 1 && abs(j - prevj) == 1)
-    {
-        return true;
-    }
-    if (previ == i && abs(previ - i) == 2)
-    {
-        if (grid[i][1] == 1)
-        {
-            return 1;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else if (previ == i && abs(previ - i) == 1)
-    {
-        return 1;
-    }
-    if (prevj == j && abs(prevj - j) == 2)
-    {
-        if (grid[1][j] == 1)
-        {
-            return 1;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else if (prevj == j && abs(prevj - j) == 1)
-    {
-        return 1;
-    }
-    return 1;
+    digits.erase(toerase);
+    Kth(k-fact[n-1]*(m-1),n-1);
+    return ;
 }
-int rec(int level)
-{
-    if (level == n)
-    {
-        return 1;
-    }
-    int ans = 0;
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-        {
-            if (grid[i][j] == 1)
-                continue;
-            if (check(i, j))
-            {
-                grid[i][j] = 1;
-                prevPos.push_back({i, j});
-                ans += rec(level + 1);
-                prevPos.pop_back();
-                grid[i][j] = 0;
-            }
-        }
-    }
-    return ans;
-}
-int main()
-{
+int main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    cin >> n;
-    int ans;
-    ans = rec(0);
-    cout << ans << endl;
+
+    lli n, k;
+    cin >> n >> k;
+
+    fact[1] = 1;
+    fact[0]=1;
+    for (int i = 2; i <= 13; i++) {
+        fact[i] = fact[i - 1] * i;
+    }
+
+    
+    if(n>=13){
+        for(int i=n-13+1;i<=n;i++){
+            digits.insert(i);
+        }
+        Kth(k,13);
+        for(int i=1;i<=n-13;i++){
+            cout<<i<<" ";
+        }
+        for(auto i:kthsol){
+            cout<<i<<" ";
+        }
+    }
+    else{
+        for (int i = 1; i <= n; i++) {
+            digits.insert(i);
+        }
+        Kth(k,n);
+        for (auto i : kthsol) {
+            cout << i<<" ";
+        }
+    }
+    
+
     return 0;
 }
