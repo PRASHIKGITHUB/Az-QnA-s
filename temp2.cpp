@@ -1,48 +1,80 @@
 #include <bits/stdc++.h>
-
 using namespace std;
+int n;
+int depth = 0;
+char choices[2] = {'(', ')'};
+int maxd;
+vector<char> curr_sol;
+int open;
+int k;
+int clo;
+void rec(int level)
+{
+	if (level == n)
+	{
+		cout << maxd << endl;
+		if (depth == 0 && maxd==k)
+		{
 
-int n, open, close;
-string s;
-void helper(int i, int o, int c)
-{
-	if (i == n)
-	{
-		cout << s << endl;
-		return;
+			for (auto i : curr_sol)
+			{
+				cout << i;
+			}
+			cout << endl;
+			return;
+		}
+		// for (auto i : curr_sol)
+		// {
+		// 	cout << i;
+		// }
+		// cout << endl;
+		// return;
 	}
-	if (o)
+	// choices
+	for (int i = 0; i < 2; i++)
 	{
-		s += '(';
-		helper(i + 1, o - 1, c);
-		s.pop_back();
+		char temp = choices[i];
+		if (i == 0 && open)
+		{
+			open--;
+			curr_sol.push_back(temp);
+			depth++;
+			maxd = max(maxd, depth);
+			rec(level + 1);
+			curr_sol.pop_back();
+			depth--;
+			maxd--;
+			open++;
+		}
+		else if (i == 1 && clo)
+		{
+			depth--;
+			if (depth < 0)
+			{
+				depth++;
+				return;
+			}
+			clo--;
+			curr_sol.push_back(temp);
+			rec(level + 1);
+			depth++;
+			// maxd=max(maxd,depth);
+			curr_sol.pop_back();
+			clo++;
+		}
 	}
-	if (o * 2 < n and c and o < c)
-	{
-		s += ')';
-		helper(i + 1, o, c - 1);
-		s.pop_back();
-	}
+	return;
 }
-void solve()
+
+int main()
+
 {
-	cin >> n;
-	open = n / 2, close = n / 2;
-	helper(0, open, close);
-}
-signed main()
-{
-	ios_base::sync_with_stdio(false);
+	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-// #ifndef ONLINE_JUDGE
-//     freopen("input.txt", "r", stdin);
-//     freopen("output.txt", "w", stdout);
-// #endif // ONLINE_JUDGE
-	int t = 1;
-	// cin >> t;
-	while (t--)
-	{
-		solve();
-	}
+	cout.tie(0);
+	cin >> n >> k;
+	open = n / 2;
+	clo = n / 2;
+	rec(0);
 	return 0;
 }

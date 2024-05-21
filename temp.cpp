@@ -1,72 +1,39 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
-using lli = long long int;
 
-lli fact[14];
+class Solution {
+public:
+    vector<bool> isArraySpecial(vector<int> &nums, vector<vector<int>> &queries) {
+        int size = nums.size();
+        vector<int> prefix(size, 0);
 
-vector<lli> kthsol;
-set<lli> digits;
-// 6227020800=13!
-// 479001600=12!
-// 1000000000
-//if n>13 then calclate the permutations of the last 13 digits 
-// for 1 to 12  calculate 1-12! respectively
-//for n>=13  calculate 13! permuatitons for the last 13 digits
-void Kth(lli k,lli n){
-    if(n==0){
-        return;
-    }
-    lli m=1;
-    int toerase;
-    for(auto i:digits){
-        if(k<=fact[n-1]*m){
-            kthsol.push_back(i);
-            toerase=i;
-            break;
+        // Preprocess to fill the prefix array
+        for (int i = 1; i < size; ++i) {
+            prefix[i] = prefix[i - 1] + (nums[i] % 2 == nums[i - 1] % 2);
         }
-        m++;
+
+        vector<bool> ans;
+        for (const auto& query : queries) {
+            int l = query[0];
+            int r = query[1];
+            // Check if the subarray nums[l..r] is special
+            if (l == r) {
+                ans.push_back(true); // A single element subarray is always special
+            } else {
+                bool subarraySpecial = (prefix[r] - prefix[l]) == 0;
+                ans.push_back(subarraySpecial);
+            }
+        }
+
+        return ans;
     }
-    digits.erase(toerase);
-    Kth(k-fact[n-1]*(m-1),n-1);
-    return ;
-}
-int main() {
+};
+int main()
+
+{
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-
-    lli n, k;
-    cin >> n >> k;
-
-    fact[1] = 1;
-    fact[0]=1;
-    for (int i = 2; i <= 13; i++) {
-        fact[i] = fact[i - 1] * i;
-    }
-
-    
-    if(n>=13){
-        for(int i=n-13+1;i<=n;i++){
-            digits.insert(i);
-        }
-        Kth(k,13);
-        for(int i=1;i<=n-13;i++){
-            cout<<i<<" ";
-        }
-        for(auto i:kthsol){
-            cout<<i<<" ";
-        }
-    }
-    else{
-        for (int i = 1; i <= n; i++) {
-            digits.insert(i);
-        }
-        Kth(k,n);
-        for (auto i : kthsol) {
-            cout << i<<" ";
-        }
-    }
-    
 
     return 0;
 }
