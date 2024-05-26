@@ -64,7 +64,11 @@ void solve()
 
     dis.assign(N + 1, vector<int>(N + 1, 0));
     vis.assign(N + 1, vector<int>(N + 1, 0));
-
+    if (Sx == Fx && Sy == Fy)
+    {
+        cout << "0" << endl;
+        return;
+    }
     bfs(make_pair(Sx, Sy));
     // for (int i = 1; i <= N; i++)
     // {
@@ -75,7 +79,14 @@ void solve()
     //     cout << endl;
     // }
     // cout << endl;
-    cout << dis[Fx][Fy] << endl;
+    if (dis[Fx][Fy] != 0)
+    {
+        cout << dis[Fx][Fy] << endl;
+    }
+    else
+    {
+        cout << "-1" << endl;
+    }
 }
 
 int main()

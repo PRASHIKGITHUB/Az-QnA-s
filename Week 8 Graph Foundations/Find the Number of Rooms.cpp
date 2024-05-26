@@ -3,26 +3,24 @@ using namespace std;
 #define endl "\n"
 using lli = long long int;
 using pp = pair<int, int>;
-vector<vector<int>> dis;
+vector<string> building;
 vector<vector<int>> vis;
-int N, Sx, Sy, Fx, Fy;
 
-int dx[] = {-2, -1, 1, 2, 2, 1, -1, -2};
-int dy[] = {-1, -2, -2, -1, 1, 2, 2, 1};
-
+int n, m;
+int dx[] = {1, -1, 0, 0};
+int dy[] = {0, 0, 1, -1};
 bool check(int x, int y)
 {
-    if (x >= 1 && y >= 1 && x <= N && y <= N)
+    if (x < n && y < m && x >= 0 && y >= 0 && building[x][y] != '#')
     {
-        return true;
+        return 1;
     }
     return false;
 }
-
 vector<pp> neighbour(pp p)
 {
     vector<pp> ans;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 4; i++)
     {
         int x = p.first + dx[i];
         int y = p.second + dy[i];
@@ -33,7 +31,6 @@ vector<pp> neighbour(pp p)
     }
     return ans;
 }
-
 void bfs(pp node)
 {
     queue<pp> q;
@@ -50,7 +47,6 @@ void bfs(pp node)
             {
                 vis[i.first][i.second] = 1;
                 q.push(make_pair(i.first, i.second));
-                dis[i.first][i.second] = dis[ele.first][ele.second] + 1;
             }
         }
     }
@@ -58,36 +54,36 @@ void bfs(pp node)
 
 void solve()
 {
-    dis.clear();
+    building.clear();
     vis.clear();
-    cin >> N >> Sx >> Sy >> Fx >> Fy;
+    cin >> n >> m;
+    building.assign(n, "");
+    vis.assign(n, vector<int>(m, 0));
 
-    dis.assign(N + 1, vector<int>(N + 1, 0));
-    vis.assign(N + 1, vector<int>(N + 1, 0));
+    for (int i = 0; i < n; i++)
+    {
+        cin >> building[i];
+    }
 
-    bfs(make_pair(Sx, Sy));
-    // for (int i = 1; i <= N; i++)
-    // {
-    //     for (int j = 1; j <= N; j++)
-    //     {
-    //         cout << dis[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
-    // cout << endl;
-    cout << dis[Fx][Fy] << endl;
+    int curr_color = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (!vis[i][j] && building[i][j] != '#')
+            {
+                curr_color++;
+                bfs(make_pair(i, j));
+            }
+        }
+    }
+    cout << curr_color;
 }
-
 int main()
 {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    solve();
     return 0;
 }
