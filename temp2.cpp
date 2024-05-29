@@ -1,93 +1,69 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define endl "\n"
-using lli = long long int;
-using pp = pair<int, int>;
-vector<vector<int>> dis;
-vector<vector<int>> vis;
-int N, Sx, Sy, Fx, Fy;
 
-int dx[] = {-2, -1, 1, 2, 2, 1, -1, -2};
-int dy[] = {-1, -2, -2, -1, 1, 2, 2, 1};
+// Direction vectors for moving in four possible directions: up, down, left, right
+int dx[] = {1, -1, 0, 0};
+int dy[] = {0, 0, 1, -1};
 
-bool check(int x, int y)
-{
-    if (x >= 1 && y >= 1 && x <= N && y <= N)
-    {
-        return true;
-    }
-    return false;
-}
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-vector<pp> neighbour(pp p)
-{
-    vector<pp> ans;
-    for (int i = 0; i < 8; i++)
-    {
-        int x = p.first + dx[i];
-        int y = p.second + dy[i];
-        if (check(x, y))
-        {
-            ans.push_back(make_pair(x, y));
-        }
-    }
-    return ans;
-}
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> grid(n, vector<int>(m));
+    vector<vector<int>> vis(n, vector<int>(m, 1e9)); // Initialize distances with a large number (1e9)
+    queue<pair<int, int>> q;
 
-void bfs(pp node)
-{
-    queue<pp> q;
-    q.push(node);
-    vis[node.first][node.second] = 1;
-
-    while (!q.empty())
-    {
-        pp ele = q.front();
-        q.pop();
-        for (auto i : neighbour(ele))
-        {
-            if (!vis[i.first][i.second])
-            {
-                vis[i.first][i.second] = 1;
-                q.push(make_pair(i.first, i.second));
-                dis[i.first][i.second] = dis[ele.first][ele.second] + 1;
+    // Reading the grid and initializing the queue with positions of 2s
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> grid[i][j];
+            if (grid[i][j] == 2) {
+                vis[i][j] = 0; // Distance to itself is zero
+                q.push({i, j});
             }
         }
     }
-}
 
-void solve()
-{
-    dis.clear();
-    vis.clear();
-    cin >> N >> Sx >> Sy >> Fx >> Fy;
+    // Perform BFS to spread the infection from 2s to 1s
+    while (!q.empty()) {
+        auto cur = q.front();
+        q.pop();
+        int x = cur.first, y = cur.second;
 
-    dis.assign(N + 1, vector<int>(N + 1, 0));
-    vis.assign(N + 1, vector<int>(N + 1, 0));
-
-    bfs(make_pair(Sx, Sy));
-    // for (int i = 1; i <= N; i++)
-    // {
-    //     for (int j = 1; j <= N; j++)
-    //     {
-    //         cout << dis[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
-    // cout << endl;
-    cout << dis[Fx][Fy] << endl;
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    int t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
+        for (int i = 0; i < 4; i++) {
+            int xx = x + dx[i];
+            int yy = y + dy[i];
+            // Check if the new position is within bounds and is a cell that can be infected (not 0)
+            if (xx >= 0 && xx < n && yy >= 0 && yy < m && grid[xx][yy] != 0 && vis[xx][yy] == 1e9) {
+                vis[xx][yy] = vis[x][y] + 1; // Update the distance
+                q.push({xx, yy});
+            }
+        }
     }
+
+    int maxSteps = 0;
+    bool unreachable = false;
+
+    // Check the maximum steps required to infect all 1s
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (grid[i][j] == 1) {
+                if (vis[i][j] == 1e9) {
+                    unreachable = true; // There is a 1 that couldn't be reached
+                } else {
+                    maxSteps = max(maxSteps, vis[i][j]); // Update the maximum steps required
+                }
+            }
+        }
+    }
+
+    if (unreachable) {
+        cout << -1 << endl; // Output -1 if any 1 could not be infected
+    } else {
+        cout << maxSteps << endl; // Output the maximum steps required to infect all 1s
+    }
+
     return 0;
 }

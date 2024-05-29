@@ -1,89 +1,74 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 #define endl "\n"
-using lli = long long int;
-using pp = pair<int, int>;
-vector<string> building;
-vector<vector<int>> vis;
+using lli=long long int;
+int n,m;
+using pp=pair<int,int>;
 
-int n, m;
-int dx[] = {1, -1, 0, 0};
-int dy[] = {0, 0, 1, -1};
-bool check(int x, int y)
-{
-    if (x < n && y < m  && x >= 0 && y >= 0 && building[x][y] != '#')
-    {
-        return 1;
+vector<vector<int>>g;
+vector<vector<int>>dis;
+int dx[]={0,0,1,-1};
+int dy[]={1,-1,0,0};
+bool check(int x,int y){
+    if(x>=1 && x<=n && y>=1 && y<=m){
+        return true;
     }
     return false;
 }
-vector<pp> neighbour(pp p)
-{
-    vector<pp> ans;
-    for (int i = 0; i < 4; i++)
-    {
-        int x = p.first + dx[i];
-        int y = p.second + dy[i];
-        if (check(x, y))
-        {
-            ans.push_back(make_pair(x, y));
+map<pp,int>neighbour(pp node){
+    map<pp,int>ans;
+    for(int i=0;i<4;i++){
+        int x=node.first+dx[i];
+        int y=node.second+dy[i];
+        if(check(x,y)){
+            if(g[node.first][node.second]==g[x][y]){
+                pp p={x,y};
+                ans[p]=0;
+            }
+            else{
+                ans[make_pair(x,y)]=1;
+            }
         }
     }
     return ans;
 }
-void bfs(pp node)
-{
-    queue<pp> q;
-    q.push(node);
-    vis[node.first][node.second] = 1;
-
-    while (!q.empty())
-    {
-        pp ele = q.front();
-        q.pop();
-        for (auto i : neighbour(ele))
-        {
-            if (!vis[i.first][i.second])
-            {
-                vis[i.first][i.second] = 1;
-                q.push(make_pair(i.first, i.second));
+void bfs(pp node){
+    deque<pp>dq;
+    dq.push_front(node);
+    dis[node.first][node.second]=0;
+    while(!dq.empty()){
+        pp temp=dq.front();
+        dq.pop_front();
+        for(auto i:neighbour(temp)){
+            pp neig=i.first;
+            int weight=i.second;
+            if(dis[neig.first][neig.second]>dis[temp.first][temp.second]+weight){
+                dis[neig.first][neig.second]=dis[temp.first][temp.second]+weight;
+                if(weight==0){
+                    dq.push_front(neig);
+                }
+                else{
+                    dq.push_back(neig);
+                }
             }
         }
     }
-}
+    cout<<dis[n][m]<<endl;
 
-void solve()
-{
-    building.clear();
-    vis.clear();
-    cin >> n >> m;
-    building.assign(n,"");
-    vis.assign(n, vector<int>(m, 0));
-    
-    for (int i = 0; i < n; i++)
-    {
-        cin>>building[i];
-    }
-
-    int curr_color = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
-            if (!vis[i][j] && building[i][j] != '#')
-            {
-                curr_color++;
-                bfs(make_pair(i, j));
-            }
-        }
-    }
-    cout<<curr_color;
 }
-int main()
-{
+int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-    solve();
+    cin>>n>>m;
+    g.resize(n+1,vector<int>(m+1,0));
+    dis.assign(n+1,vector<int>(m+1,1e9));
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=m;j++){
+            cin>>g[i][j];
+        }
+    }
+    bfs(make_pair(1,1));
+
     return 0;
 }
