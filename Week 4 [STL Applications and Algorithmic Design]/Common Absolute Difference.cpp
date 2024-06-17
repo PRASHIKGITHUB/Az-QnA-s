@@ -24,10 +24,10 @@ void solve(){
     for(auto i:mp){
         int b=i.first+k;
         if(mp.find(b)!=mp.end()){
-            ans+=mp[i.first]*mp[b]*1LL;
+            ans+=1LL*mp[i.first]*mp[b];
         }
     }
-    ans/=2;
+    // ans/=2;
     cout<<ans<<endl;;
 }
 
