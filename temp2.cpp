@@ -1,44 +1,55 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define endl "\n"
-using lli=long long int;
-void solve(){
-    int n,k;
-    cin>>n>>k;
-    map<int,int>mp;
-    lli ans=0;
-    for(int i=0;i<n;i++){
-        int temp;
-        cin>>temp;
-        mp[temp]++;
-    }
-    if(k==0){
-        for(auto i:mp){
-            if(i.second!=1){
-                ans+=1LL*i.second*(i.second-1)/2;
-            }
-        }
-        cout<<ans<<endl;
-        return;
-    }
-    for(auto i:mp){
-        int b=i.first+k;
-        if(mp.find(b)!=mp.end()){
-            ans+=mp[i.first]*mp[b]*1LL;
-        }
-    }
-    ans/=2;
-    cout<<ans<<endl;;
+string s,t;
+int n,m;
+string lcs,current_string;
+
+
+int dp[3001][3001];
+int rec(int i,int j){
+  if(i==n || j==m){
+    return 0;
+  }
+  
+  if(dp[i][j]!=-1){
+    return dp[i][j];
+  }
+  int ans=-1e9;
+  ans=max({rec(i+1,j),rec(i,j+1)});
+  
+  if(s[i]==t[j]){
+    ans=max(1+rec(i+1,j+1),ans);
+  }
+  
+  return dp[i][j]=ans;
 }
 
-int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    int t;
-    cin>>t;
-    while(t--){
-        solve();
+
+void print(int i,int j){
+  if(i==n || j==m){
+    return;
+  }
+  
+  if(s[i]==t[j]){
+    lcs+=s[i];
+    print(i+1,j+1);
+  }else{
+    if(dp[i+1][j]>dp[i][j+1]){
+      print(i+1,j);
+    }else{
+      print(i,j+1);
     }
-    return 0;
+  }
+}
+int main(){
+  memset(dp,-1,sizeof(dp));
+  cin>>s>>t;
+  n=s.length();
+  m=t.length();
+  lcs.clear();
+  current_string.clear();
+  int ans=rec(0,0);
+    print(0,0);
+  cout<<lcs<<endl;
+  return 0;
 }

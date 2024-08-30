@@ -9,7 +9,8 @@ bool check(lli x, lli *arr)
     lli deployed=0;
 
    for(int i=1;i<n;i++){
-        deployed+=(arr[i]-arr[i-1]+x-1)/x-1;
+    lli d=arr[i]-arr[i-1];
+        deployed+=((d+x-1)/x)-1 ;
    }
    return (deployed)<=k;
 }

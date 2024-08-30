@@ -3,73 +3,68 @@ using namespace std;
 #define endl "\n"
 using lli=long long int;
 using pp=pair<lli,lli>;
-vector<int>parent;
-vector<int>num_nodes;
-int rep(int x){
-    if(parent[x]==x){
-        return x;
+lli m = 1e9 + 7;
+int n;
+int arr[1001];
+int dp[1001];
+lli freq[1001];
+int rec(int l){//rec(l) --> longest increasing subseq ending at index l
+    if(l<0){//base case
+        return 0;
     }
-    else{
-        return parent[x]=rep(parent[x]);
+
+    if(dp[l]!=-1){
+        return dp[l];
     }
-}
-void merge(int a,int b){
-    a=rep(a);
-    b=rep(b);
-    if(a==b){
-        return;
-    }
-    else{
-        if(num_nodes[a]>num_nodes[b]){
-            parent[b]=a;
-            num_nodes[a]+=num_nodes[b];
-        }
-        else{
-            parent[a]=b;
-            num_nodes[b]+=num_nodes[a];
+    int ans=1;
+    for(int i=l-1;i>=0;i--){
+        if(arr[i]<arr[l]){
+            freq[rec(i)+1]++;
+            ans=max(rec(i)+1,ans);
         }
     }
+
+    return dp[l]=ans;
 }
 void solve(){
-    int n,v,b_cost,r_cost;
-    cin>>n>>v>>b_cost>>r_cost;
-    parent.resize(n+2);
-    num_nodes.resize(n+2);
-    for(int i=1;i<=n+1;i++){
-        parent[i]=i;
-        num_nodes[i]=1;
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
     }
-    vector<pair<int,pair<int,int>>>edges;
-    for(int i=0;i<v;i++){
-        int a,b;
-        edges.push_back({r_cost,{a,b}});
-    }
-    for(int i=1;i<=n;i++){
-        edges.push_back(make_pair(b_cost,make_pair(i,n+1)));
-    }
-    sort(edges.begin(),edges.end());
-    lli ans=0;
-    for(auto v:edges){
-        int wt=v.first;
-        int a=v.second.first;
-        int b=v.second.second;
-        if(rep(a)!=rep(b)){
-            merge(a,b);
-            ans+=wt;
-        }
-    }
-    cout<<ans<<endl;
 
+    int final_max_len=0;
+    for(int i=0;i<n;i++){
+        final_max_len=max(final_max_len,rec(i));
+    }
+    cout<<freq[final_max_len]%m<<endl;
+    for(int i=1;i<=n;i++){
+        cout<<freq[i]<<" ";
+    }
 }
+// 1
+// 5
+// 1 2 2 3 6
+// 5
+// 1 3 5 4 7
+// 6
+// 1 1 1 1 1 1
+// 4
+// 3 1 1 2
 
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
     int t;
+    
     cin>>t;
     while(t--){
+        memset(dp,-1,sizeof(dp));
+        memset(freq,0,sizeof(freq));
         solve();
     }
     return 0;
 }
+
+
+
