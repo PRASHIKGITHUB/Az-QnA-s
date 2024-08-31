@@ -5,7 +5,7 @@ int n,k;
 int arr[1001];
 int dp[1001][1001];
 
-int rec(int l,int k){
+int rec(int l,int k){//minimum of all possible sums of k subarrays ending at index l
     //pruning
     //basecase
     if(l==-1){
