@@ -17,7 +17,7 @@ lli solve(){
     lli ans = 0;
     // map<int, int> mp; //if we use map TC will be nlog n
     
-    while (tail < n)
+    while (tail < n)//subarray is starting from tail and ending at head
     {
         while (head + 1 < n && (distinct < k || mp[arr[head + 1]] != 0))
         {

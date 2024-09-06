@@ -33,12 +33,14 @@ bool check(lli x, lli *arr)
 // 5 4
 // 1 7 2 3 5
 // 7
-void solve()
+void solve()//minimise the maximum time taken 
+//for ans we are searching for the maximum time
+//if painters can paint in x time then painters can also paint in x+1 time but we need find the minimum of them 
 {
     cin >> n >> k;
     lli arr[n];
-    lli high = 0;
-    lli low = 0;
+    lli high = 0;//high will be sum of Ai if we have one painter
+    lli low = 0;//low will be maximum of Ai if we have n number of painters
     for (lli i = 0; i < n; i++)
     {
         cin >> arr[i];
