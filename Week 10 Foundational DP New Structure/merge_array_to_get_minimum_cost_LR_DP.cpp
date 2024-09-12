@@ -18,7 +18,7 @@ int rec(int l,int r){//maximum cost to merge all the elements from l to r
     for(int i=l;i<=r;i++){
         tot+=arr[i];
     }
-
+ 
     int ans=0;
     for(int mid=l;mid<r;mid++){
         sum+=arr[mid];
