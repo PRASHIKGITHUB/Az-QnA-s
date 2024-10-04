@@ -7,22 +7,29 @@ bool is_cycle=false;
 vector<vector<int>>g;
 vector<int>state;
 vector<int>parent;
-//state 0 means not visited
+vector<int>any_cycle;
 void dfs(int node,int par){
     state[node]=2;
     parent[node]=par;
     for(auto v:g[node]){
-        if(v==parent[node]){
-            continue;//if it was directed graph this won't be here
+        if(v==parent[node]){//if it was directed graph this won't be here --> you can see this in round trip 2
+            continue;
         }
-        if(state[v]==1){
+        if(state[v]==1){//1 means not visited --> forward edge
             dfs(v,node);
         }
-        else if(state[v]==2){
+        else if(state[v]==2){// 2 means the v is already visited and we are going on it (cycle detected) --> back edge
+            if(is_cycle==0){//this is just for printing any cycle
+                int temp=node;
+                while(node!=v){
+                    any_cycle.push_back(temp);
+                    temp=parent[temp];
+                }
+            }
             is_cycle=true;
         }
     }
-    state[node]=3;
+    state[node]=3;//3 means node and it's neighbours got visited --> cross edge
 }
 int main(){
     ios_base::sync_with_stdio(0);

@@ -4,24 +4,24 @@ using namespace std;
 // lli m=1e9+7;
 lli n, k;
 
-bool check(lli x, lli *arr)
+bool check(lli x, lli *arr)//can we paint with max time x with painters <=k
 {
     lli deployed=0;
     lli time_remain=0;
     for(lli i=0;i<n;i++){
         
         if(time_remain>=arr[i]){
-            time_remain-=arr[i];
+            time_remain-=arr[i]; 
         }
         else{
             deployed++;
-            if(deployed>k){
+            if(deployed>k){ 
                 return 0;
-            }
+            } 
             time_remain=x;
             if(time_remain>=arr[i]){
                 time_remain-=arr[i];
-            }
+            } 
             else{
                 return 0;
             }

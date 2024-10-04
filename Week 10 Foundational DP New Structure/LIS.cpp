@@ -18,7 +18,7 @@ int rec(int l)
 
     int ans = 1;
     for (int p = 0; p < l; p++)
-    {
+    { 
         if (arr[p] < arr[l])
         {
             ans = max(ans, 1 + rec(p));//jab koi piche chota milega tabhi toh jaoge piche

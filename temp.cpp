@@ -1,91 +1,73 @@
-using lli = long long int;
 #include <bits/stdc++.h>
-class Solution
-{
-public:
-    std::vector<lli> prefix;
-    std::vector<int> right;
-    std::vector<int> left;
-
-    int maxSumMinProduct(std::vector<int> &nums)
-    {
-        int n = nums.size();
-        std::stack<int> s;
-        prefix.assign(n + 1, 0);
-        prefix[0] = nums[0];
-        for (int i = 1; i < n; i++)
-        {
-            prefix[i] = prefix[i - 1] + nums[i];
-        }
-
-        right.resize(n);
-        left.resize(n);
-
-        // Calculate left limits
-        for (int i = 0; i < n; i++)
-        {
-            while (!s.empty() && nums[s.top()] >= nums[i])
-            {
-                s.pop();
-            }
-            if (s.empty())
-            {
-                left[i] = -1;
-            }
-            else
-            {
-                left[i] = s.top();
-            }
-            s.push(i);
-        }
-
-        while (!s.empty())
-        {
-            s.pop();
-        }
-
-        // Calculate right limits
-        for (int i = n - 1; i >= 0; i--)
-        {
-            while (!s.empty() && nums[s.top()] >= nums[i])
-            {
-                s.pop();
-            }
-            if (s.empty())
-            {
-                right[i] = n;
-            }
-            else
-            {
-                right[i] = s.top();
-            }
-            s.push(i);
-        }
-
-        lli ans = 0;
-        lli Subsum = 0;
-        for (int i = 0; i < n; i++)
-        {
-            if (right[i] == n && left[i] == -1)
-            {
-                Subsum = prefix[n - 1];
-            }
-            else if (right[i] == n)
-            {
-                Subsum = prefix[n - 1] - prefix[left[i]];
-            }
-            else if (left[i] == -1)
-            {
-                Subsum = prefix[right[i] - 1];
-            }
-            else
-            {
-                Subsum = prefix[right[i] - 1] - prefix[left[i]];
-            }
-            ans = std::max(Subsum * nums[i], ans);
-        }
-
-        lli m = 1e9 + 7;
-        return ans % m;
+using namespace std;
+bool is_vovel(char ch) {
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
     }
-};
+
+    int countOfSubstrings(string word, int k) {
+        int ans = 0;
+        int n = word.length();
+        int head = -1;
+        int tail = 0;
+        map<char, int> vov;
+        vector<int> next_consonant_index(n+1, n);
+        
+        // Precompute next consonant index
+        for (int i = n - 2; i >= 0; i--) {
+            if (!is_vovel(word[i + 1])) {  // Check for consonant
+                next_consonant_index[i] = i + 1;
+            } else {
+                next_consonant_index[i] = next_consonant_index[i + 1];
+            }
+        }
+
+        int vovel_types = 0, consonant_count = 0;
+
+        while (tail < n) {
+            // Expand the window
+            while (head + 1 < n && (vovel_types < 5 || consonant_count < k)) {
+                head++;
+                if (is_vovel(word[head])) {
+                    vov[word[head]]++;
+                    if (vov[word[head]] == 1) {
+                        vovel_types++;
+                    }
+                } else {
+                    consonant_count++;
+                }
+            }
+
+            // Check if we have a valid substring
+            if (consonant_count == k && vovel_types == 5) {
+                int temp = next_consonant_index[head];  // Next consonant index
+                ans += (temp - head);  // All substrings ending between `head` and `temp` are valid
+            }
+
+            // Move the tail forward and shrink the window
+            if (tail > head) {
+                tail++;
+                head = tail - 1;
+            } else {
+                if (is_vovel(word[tail])) {
+                    vov[word[tail]]--;
+                    if (vov[word[tail]] == 0) {
+                        vovel_types--;
+                    }
+                } else {
+                    consonant_count--;
+                }
+                tail++;
+            }
+        }
+        
+        return ans;
+    }
+
+int main()
+{
+    string s;
+    int k;
+    cin >> s >> k;
+    cout << countOfSubstrings(s, k) << endl;
+    return 0;
+}

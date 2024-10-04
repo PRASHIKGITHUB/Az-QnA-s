@@ -35,6 +35,8 @@ int main(){
 
     int len=lis.size();
 
+    //this is for finding the LIS
+
     vector<int>final_lis;
     for(int i=n-1;i>=0;i--){
         if(last_inserted_position_length[i]==len){

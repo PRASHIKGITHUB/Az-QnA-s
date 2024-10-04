@@ -16,7 +16,7 @@ void solve(){
        cin>>arr[i];
    }
 
-   int lo = 1;
+   int lo = 1;//very intelligently
    int hi = n-1;
    int peak = 0;
    while(lo<=hi){

@@ -14,7 +14,7 @@ long long countOfSubstrings(string word, int k)
     map<char, int> vov;
     vector<int> next_consonant_index(n + 1, n);
 
-    for (int i = n - 2; i >= 0; i--)
+    for (int i = n - 2; i >= 0; i--)//crete a vector to store the next consonant index
     {
         if (!is_vovel(word[i + 1]))
         { // a consonant
@@ -28,7 +28,7 @@ long long countOfSubstrings(string word, int k)
     int vovel_types = 0, consonant_count = 0;
     while (tail < n)
     {
-        while (head + 1 < n && (vovel_types < 5 || consonant_count < k))
+        while (head + 1 < n && (vovel_types < 5 || consonant_count < k))//
         {
             head++;
             if (is_vovel(word[head]))
@@ -48,9 +48,9 @@ long long countOfSubstrings(string word, int k)
         {
             // find the next consonant
             int temp = next_consonant_index[head];
-            ans += (temp - head);
+            ans += (temp - head);//all substrings ending between head and temp are valid
         }
-        cout << "tail " << tail << " head " << head << endl;//
+        cout << "tail " << tail << " head " << head << endl;//printing this was causing more time to be taken
 
         if (tail > head)
         {

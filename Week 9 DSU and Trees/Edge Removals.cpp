@@ -86,7 +86,7 @@ int main()
     }
     // now edges will contain all the edges which aren't going to get removed(initial state)
     reverse(reverse_query.begin(), reverse_query.end());
-    // add all the edges to the graph from edges vector
+    // add all the edges to the graph from edges vector (those which are not going to get removed)
     for (auto e : edges)
     {
         pair<int, int> p = edge_ordering[e - 1];
