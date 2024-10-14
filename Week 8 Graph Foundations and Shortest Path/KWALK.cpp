@@ -46,7 +46,7 @@ void bfs(pp node)
         q.pop();
         for (auto i : neighbour(ele))
         {
-            if (!vis[i.first][i.second])
+            if (!vis[i.first][i.second])//could have done just by using dis
             {
                 vis[i.first][i.second] = 1;
                 q.push(make_pair(i.first, i.second));

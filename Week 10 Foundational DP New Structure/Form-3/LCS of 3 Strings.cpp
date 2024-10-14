@@ -16,7 +16,7 @@ int rec(int i,int j,int k){
     }
     
     int ans=-1e9;
-    ans=max({rec(i+1,j,k),rec(i,j+1,k),rec(i,j,k+1)});
+    ans=max({rec(i+1,j,k),rec(i,j+1,k),rec(i,j,k +1)});
 
     if(s1[i]==s2[j] && s2[j]==s3[k]){
         ans=max(ans,1+rec(i+1,j+1,k+1));

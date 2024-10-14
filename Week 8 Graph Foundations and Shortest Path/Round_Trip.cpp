@@ -21,10 +21,11 @@ void dfs(int node,int par){
         else if(state[v]==2){// 2 means the v is already visited and we are going on it (cycle detected) --> back edge
             if(is_cycle==0){//this is just for printing any cycle
                 int temp=node;
-                while(node!=v){
+                while(temp!=v){
                     any_cycle.push_back(temp);
                     temp=parent[temp];
                 }
+                any_cycle.push_back(v);
             }
             is_cycle=true;
         }
@@ -52,6 +53,9 @@ int main(){
     }
     if(is_cycle){
         cout<<"YES"<<endl;
+        for(auto ele:any_cycle){
+            cout<<ele<<" ";
+        }
     }
     else{
         cout<<"NO"<<endl;

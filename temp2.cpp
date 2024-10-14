@@ -1,87 +1,30 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-bool is_vovel(char ch)
-{
-
-    return (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u');
-}
-long long countOfSubstrings(string word, int k)
-{
-    long long ans = 0;
-    int n = word.length();
-    int head = -1;
-    int tail = 0;
-    map<char, int> vov;
-    vector<int> next_consonant_index(n + 1, n);
-
-    for (int i = n - 2; i >= 0; i--)
-    {
-        if (!is_vovel(word[i + 1]))
-        { // a consonant
-            next_consonant_index[i] = i + 1;
-        }
-        else
-        {
-            next_consonant_index[i] = next_consonant_index[i + 1];
-        }
+bool is_cycle=false;
+vector<int>state;
+vector<vector<int>>g;
+void dfs(int node){
+    if(state[node]==2){
+        return;
     }
-    int vovel_types = 0, consonant_count = 0;
-    while (tail < n)
-    {
-        while (head + 1 < n && (vovel_types < 5 || consonant_count < k))
-        {
-            head++;
-            if (is_vovel(word[head]))
-            {
-                vov[word[head]]++;
-                if (vov[word[head]] == 1)
-                {
-                    vovel_types++;
-                }
-            }
-            else
-            {
-                consonant_count++;
-            }
-        }
-        if (consonant_count == k && vovel_types == 5)
-        {
-            // find the next consonant
-            int temp = next_consonant_index[head];
-            ans += (temp - head);
-        }
-        cout << "tail " << tail << " head " << head << endl;//
-
-        if (tail > head)
-        {
-            tail++;
-            head = tail - 1;
-        }
-        else
-        {
-            if (is_vovel(word[tail]))
-            {
-                vov[word[tail]]--;
-                if (vov[word[tail]] == 0)
-                {
-                    vovel_types--;
-                }
-            }
-            else
-            {
-                consonant_count--;
-            }
-            tail++;
-        }
-    }
-    return ans;
+    
 }
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    int n,m;
+    cin>>n>>m;
+    g.resize(n);
+    state.assign(n,1);
+    for(int i=0;i<m;i++){
+        int a,b;
+        cin>>a>>b;
+        g[a].emplace_back(b);
+        g[b].emplace_back(a);
+    }
+    dfs(0);
+    cout<<is_cycle<<endl;
 
-int main()
-{
-    string s;
-    int k;
-    cin >> s >> k;
-    cout << countOfSubstrings(s, k) << endl;
     return 0;
 }
