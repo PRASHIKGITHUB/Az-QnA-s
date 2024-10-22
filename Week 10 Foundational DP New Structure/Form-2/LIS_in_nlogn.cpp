@@ -33,7 +33,7 @@ int main(){
         cout<<i<<" ";
     }
 
-    int len=lis.size();
+    int len=lis.size();//max length of lis
 
     //this is for finding the LIS
 

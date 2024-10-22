@@ -1,46 +1,57 @@
 #include <iostream>
 #include <vector>
-#include <queue>
+#include <algorithm>
+
 using namespace std;
-int n;
-vector<int> edge[100001];
-vector<int> backedge[100001];
 
-int main(){
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int m; cin >> n >> m;
-    int in_degree[n+1], dp[n+1];
-    for(int i = 0; i <= n; i++){
-        in_degree[i] = 0;
-        dp[i] = 0;
+// Function to find the number of intervals that contain the query point q
+vector<int> getIntervalsCount(const vector<pair<int, int>>& intervals, const vector<int>& queries) {
+    int n = intervals.size();
+    
+    // Arrays to store the start and end points
+    vector<int> open, close;
+    
+    // Fill open and close arrays
+    for (auto interval : intervals) {
+        open.push_back(interval.first);
+        close.push_back(interval.second);
     }
-    dp[1] = 1;
-    for(int i = 0; i < m; i++){
-        int a,b; cin >> a >> b;
-        edge[a].push_back(b);
-        backedge[b].push_back(a);
-        in_degree[b]++;
+    
+    // Sort open and close arrays
+    sort(open.begin(), open.end());
+    sort(close.begin(), close.end());
+    
+    vector<int> result;
+    
+    // Process each query
+    for (int q : queries) {
+        // Find how many intervals start <= q
+        int startCount = upper_bound(open.begin(), open.end(), q) - open.begin();
+        
+        // Find how many intervals end < q
+        int endCount = lower_bound(close.begin(), close.end(), q) - close.begin();
+        
+        // The number of intervals that contain q is startCount - endCount
+        result.push_back(startCount - endCount);
     }
-    //uses Kahn's algorithm
-    queue<int> q;
-    for(int i = 0; i < n; i++) {
-        if(in_degree[i] == 0) {
-            q.push(i);
-        }
-    }
+    
+    return result;
+}
 
-    while(!q.empty()) {
-        int node = q.front();
-        q.pop();
-        for(int next : edge[node]) {
-            in_degree[next]--;
-            if(in_degree[next] == 0) q.push(next);
-        }
-
-        for(int prev : backedge[node]) {
-            dp[node] = (dp[node] + dp[prev]) % 1000000007;
-        }
+int main() {
+    // Example input
+    int n = 3; // Number of intervals
+    vector<pair<int, int>> intervals = {{1, 5}, {3, 7}, {8, 10}}; // Intervals (L, R)
+    vector<int> queries = {4, 6, 9}; // Queries
+    
+    // Get the result for each query
+    vector<int> result = getIntervalsCount(intervals, queries);
+    
+    // Output the result
+    for (int count : result) {
+        cout << count << " ";
     }
-    cout << dp[n] << endl;
+    cout << endl;
+    
     return 0;
 }
