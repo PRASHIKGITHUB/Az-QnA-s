@@ -19,7 +19,7 @@ int rec(int l, int k) { // minimum of all possible sums of k subarrays ending at
     // transition
     int ans = 1e9;
     int min_seen = arr[l];
-
+ 
     for (int j = l - 1; j >= -1; j--) {
         ans = min(ans, rec(j, k - 1) + min_seen);
         if (j >= 0) {  // Ensure you don't access out of bounds

@@ -16,7 +16,7 @@ void solve()
     int ans = 0;
     while (tail < n)
     {
-        while (head + 1 < n && ((arr[head + 1] == 1 && cntzero <= k) || (arr[head + 1] == 0 && cntzero < k)))
+        while (head + 1 < n && (arr[head+1]==1 || cntzero<k))
         {
             head++;
             if (arr[head] == 0)

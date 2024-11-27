@@ -12,7 +12,7 @@ bool check(int x,int *arr){
     else{
         return 0;
     }
-}
+} 
 void binary(int* arr){
     int low=0;
     int high=n-1;

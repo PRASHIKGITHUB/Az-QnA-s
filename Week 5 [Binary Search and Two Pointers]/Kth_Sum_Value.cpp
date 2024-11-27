@@ -7,7 +7,7 @@ lli n, m, k;
 bool check(lli *a, lli *b, lli x)
 {
     lli sum = 0;
-    if (n > m)
+    if (m > n)
     {
         for (lli i = 0; i < n; i++)
         {

@@ -5,8 +5,9 @@ class Home
 public:
     Home(string address) : address_(address)
     {
+        cout<<"Home() constructed"<<endl;
     }
-    ~Home(){cout<<"~Home() of address "<<address_<<endl;}
+    ~Home(){cout<<"~Home() destroyed "<<address_<<endl;}
 
     string address_;
 
@@ -65,8 +66,8 @@ int main()
     Person *p2=new Person("shruti",home);
     delete p1;
     p2->GetAddress();//it's still there 
-    // delete home;
     p2->GetAddress();
     delete p2;
+    delete home;
     return 0;
 }
